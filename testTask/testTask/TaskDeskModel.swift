@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: Структура базы данных
 
-struct Tasks {
+struct Tasks: Equatable {
     var text: String
 }
 
@@ -19,7 +19,7 @@ struct Tasks {
 var cellsInLine: CGFloat = 1
 
 // Переменная-массив с базой данных, на основе которой строится коллекция
-var tasksData: [Tasks] = [Tasks(text: "Твоя первая заметка) Не стесняйся, будь как дома :3")]
+var tasksData: [Tasks] = []
 
 // MARK: Типовые функции
 

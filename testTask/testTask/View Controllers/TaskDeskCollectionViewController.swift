@@ -16,12 +16,16 @@ class TaskDeskCollectionViewController: UICollectionViewController {
         
         // Подгрузка данных с Realm
         PersistanceRealm.shared.loadData(data: &tasksData)
-        collectionView.reloadData()
-    
+        
+        // Задание первой заметки при отсутствии заметок
+        if tasksData == [] {
+            let firstTask = Tasks(text: "Твоя первая заметка) Не стесняйся, будь как дома :3")
+            tasksData.append(firstTask)
+        }
+        
         // Создание жеста для перемещения ячейки по списку
         let longPress = UILongPressGestureRecognizer(target: self, action: #selector(longPressGesture))
         collectionView.addGestureRecognizer(longPress)
-
     }
 
 // MARK: Создание Collection View
