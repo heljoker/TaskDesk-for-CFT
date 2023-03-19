@@ -6,13 +6,21 @@
 //
 
 import Foundation
+import UIKit
 import RealmSwift
 
 // MARK: Класс объекта Realm
 
 // Класс объекта базы данных Realm с необходимым набором параметров
 class Notes: Object {
+    
+    // Текст заметки
     @objc dynamic var text: String = ""
+    
+    // Цвета заметки и текста
+    @objc dynamic var noteColour: String = ""
+    @objc dynamic var textColour: String = ""
+ 
 }
 
 class PersistanceRealm {
@@ -30,6 +38,8 @@ class PersistanceRealm {
         for (_,item) in data.enumerated() {
             let note = Notes()
             note.text = item.text
+            note.textColour = item.textColour
+            note.noteColour = item.noteColour
             try! realm.write {
                 realm.add(note)
             }
@@ -40,7 +50,7 @@ class PersistanceRealm {
     func loadData(data: inout [Tasks]) {
         let notes = realm.objects(Notes.self)
         for note in notes{
-            let task = Tasks(text: note.text)
+            let task = Tasks(text: note.text, noteColour: note.noteColour, textColour: note.textColour)
             data.append(task)
         }
     }

@@ -9,6 +9,8 @@ import UIKit
 
 class TaskDeskCollectionViewController: UICollectionViewController {
 
+    
+    
 // MARK: Действия перед загрузкой окна
     
     override func viewDidLoad() {
@@ -19,7 +21,7 @@ class TaskDeskCollectionViewController: UICollectionViewController {
         
         // Задание первой заметки при отсутствии заметок
         if tasksData == [] {
-            let firstTask = Tasks(text: "Твоя первая заметка) Не стесняйся, будь как дома :3")
+            let firstTask = Tasks(text: "Твоя первая заметка) Не стесняйся, будь как дома :3", noteColour: "желтый", textColour: "черный")
             tasksData.append(firstTask)
         }
         
@@ -42,11 +44,28 @@ class TaskDeskCollectionViewController: UICollectionViewController {
 
     // Кастомизация ячейки
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "taskCell", for: indexPath) as! TaskCell
         cell.layer.cornerRadius = 20
         cell.layer.borderWidth = 1
         cell.layer.borderColor = CGColor.init(gray: 2/3, alpha: 1)
+        
+        switch tasksData[indexPath.item].noteColour {
+        case "оранжевый": cell.backgroundColor = .systemOrange
+            case "зеленый": cell.backgroundColor = .systemGreen
+            case "голубой": cell.backgroundColor = .systemCyan
+            default: cell.backgroundColor = .systemYellow
+        }
+        
+        switch tasksData[indexPath.item].textColour {
+            case "красный": cell.mainLabel.textColor = .red
+            case "белый": cell.mainLabel.textColor = .white
+            case "серый": cell.mainLabel.textColor = .darkGray
+            default: cell.mainLabel.textColor = .black
+        }
+
         cell.mainLabel.text = tasksData[indexPath.item].text
+            
         return cell
     }
 
@@ -67,11 +86,22 @@ class TaskDeskCollectionViewController: UICollectionViewController {
         // Подготовка формы окна режима редактирования заметки по нажатию на саму заметку
         if let editVC = segue.destination as? EditorViewController, segue.identifier == "editSegue" {
             let cell = sender as! TaskCell
+            
+            // Подготовка и передача текста
             guard let preparedText = cell.mainLabel.text else {return}
             editVC.textOfTextField = preparedText
+            
+            // Подготовка и передача индекса выбранной ячейки
             guard let index = collectionView.indexPath(for: cell) else {return}
             editVC.indexOfEditingItem = index.item
+            
+            // Передача маркера редактирования
             editVC.changingMarker = true
+            
+            // Передача цветов заметки и текста
+            editVC.noteColour = tasksData[index.item].noteColour
+            editVC.textColour = tasksData[index.item].textColour
+            
             editVC.delegate = self
         }
         
@@ -104,6 +134,8 @@ class TaskDeskCollectionViewController: UICollectionViewController {
         PersistanceRealm.shared.saveData(data: tasksData)
         print("Массив на стадии перемещения ячейки: \(tasksData)")
     }
+    
+    
     
 }
 

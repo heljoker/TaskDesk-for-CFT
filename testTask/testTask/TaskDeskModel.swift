@@ -6,11 +6,18 @@
 //
 
 import Foundation
+import UIKit
 
 // MARK: Структура базы данных
 
 struct Tasks: Equatable {
+    
+    // Текст заметки
     var text: String
+    // Цвет заметки
+    var noteColour: String
+    // Цвет текста
+    var textColour: String
 }
 
 // MARK: Необходимые функциональные переменные
